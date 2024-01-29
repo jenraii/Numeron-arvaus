@@ -1,22 +1,37 @@
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
+
+var number = Math.floor(Math.random() * 100) + 1;
+var guesses = 0;
 
 export default function App() {
 
-  const [message, setMessage] = useState('');
+  const [text, SetText] = useState("Guess a number between 1 - 100");
+  const [guess, SetGuess] = useState();
 
-  const showAlert = () => {
-    Alert.alert('Hello', 'Syötit tekstin: ' + message);
+  const buttonPressed = () => {
+    guesses += 1;
+    if (guess < number ) {
+      SetText("Your guess " +  guess + " is too low")
+    } else if (guess > number) {
+      SetText("Your guess " + guess + " is too high")
+    } else {
+      Alert.alert("You guessed the number in " + guesses + " guesses")
+      guesses = 0
+      number = Math.floor(Math.random() * 100) + 1;
+      SetText("Guess a number between 1 - 100")
+    }
   }
 
   return (
     <View style={styles.container}>
-      <TextInput 
-      placeholder='Syötä teksti'
-      onChangeText={text => setMessage(text)}
-      />
-      <Button title="Press" onPress={showAlert} color="green" />
+      <Text>{text}</Text>
+      <TextInput style={styles.input} onChangeText={guess => SetGuess(guess)} value={guess}
+        keyboardType="numeric" />
+      <View style={styles.button} >
+        <Button title="Make a guess" onPress={buttonPressed} />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -29,4 +44,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  input: {
+    borderWidth: 1,
+    borderColor: "black",
+    width: 50,
+    marginTop: 20,
+  },
+  button: {
+    marginTop: 20,
+  }
 });
